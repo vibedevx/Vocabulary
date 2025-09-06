@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Study Mode</title>
+  <script src="study.js" defer></script>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+    }
+    #word { font-size: 2em; margin-bottom: 16px; }
+    button { margin: 0 4px; padding: 8px 16px; }
+    @media (prefers-color-scheme: dark) {
+      body { --bg: #1b1b1b; --fg: #f3f3f3; }
+      button { background: #333; color: #fff; }
+    }
+    @media (prefers-color-scheme: light) {
+      body { --bg: #ffffff; --fg: #000000; }
+      button { background: #eee; }
+    }
+  </style>
+</head>
+<body>
+  <div id="word">No words</div>
+  <div>
+    <button id="pronounce">🔊</button>
+    <button id="next">Next</button>
+  </div>
+</body>
+</html>

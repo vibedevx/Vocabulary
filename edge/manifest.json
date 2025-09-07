@@ -3,7 +3,7 @@
   "name": "Vocabulary Collector",
   "version": "1.0",
   "description": "Collect selected text into a vocabulary list.",
-  "permissions": ["contextMenus", "storage", "tts", "sidePanel"],
+  "permissions": ["contextMenus", "storage", "tts", "sidePanel", "scripting", "activeTab"],
   "host_permissions": ["https://api.dictionaryapi.dev/*"],
   "background": {
     "service_worker": "background.js"
@@ -13,5 +13,14 @@
   },
   "action": {
     "default_title": "Vocabulary"
+  },
+  "commands": {
+    "add-to-vocabulary": {
+      "suggested_key": {
+        "default": "Ctrl+A",
+        "mac": "Command+A"
+      },
+      "description": "Add current selection to vocabulary list"
+    }
   }
 }

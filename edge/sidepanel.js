@@ -1,3 +1,38 @@
+// Export vocabulary as JSON file
+function exportVocabulary() {
+  chrome.storage.local.get({ vocabulary: [] }, data => {
+    const blob = new Blob([JSON.stringify(data.vocabulary, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'vocabulary.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 0);
+  });
+}
+
+// Import vocabulary from JSON file
+function importVocabulary(file) {
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) throw new Error('Invalid format');
+      // Remove duplicates and trim
+      const clean = Array.from(new Set(imported.map(w => w.trim()).filter(Boolean)));
+      chrome.storage.local.set({ vocabulary: clean }, () => {
+        renderList(clean);
+      });
+    } catch (err) {
+      alert('Failed to import: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
 let voiceName = '';
 let speechRate = 1.0;
 
@@ -161,6 +196,20 @@ document.addEventListener('DOMContentLoaded', () => {
   setupTabs();
   setupDictionary();
   setupStudy();
+  // Setup import/export buttons
+  const exportBtn = document.getElementById('export-vocab');
+  const importBtn = document.getElementById('import-vocab');
+  const importFile = document.getElementById('import-file');
+  if (exportBtn) exportBtn.addEventListener('click', exportVocabulary);
+  if (importBtn && importFile) {
+    importBtn.addEventListener('click', () => importFile.click());
+    importFile.addEventListener('change', e => {
+      if (importFile.files && importFile.files[0]) {
+        importVocabulary(importFile.files[0]);
+        importFile.value = '';
+      }
+    });
+  }
 });
 
 chrome.runtime.onMessage.addListener(msg => {
